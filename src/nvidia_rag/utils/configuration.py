@@ -782,6 +782,11 @@ class RankingConfig(_ConfigBase):
         env="ENABLE_RERANKER",
         description="Enable reranking of retrieved documents before generation",
     )
+    vlm_reranker_include_images: bool = Field(
+        default=True,
+        env="APP_RANKING_VLM_INCLUDE_IMAGES",
+        description="When using the VLM reranker, include images alongside text in passages. Set to False to pass text-only chunks.",
+    )
     api_key: SecretStr | None = Field(
         default=None,
         env="APP_RANKING_APIKEY",

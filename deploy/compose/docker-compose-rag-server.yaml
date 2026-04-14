@@ -114,6 +114,8 @@ services:
       # APP_RANKING_SERVERURL: ${APP_RANKING_SERVERURL-"nemotron-ranking-ms:8000"}
       # APP_RANKING_MODELNAME: ${APP_RANKING_MODELNAME:-"nvidia/llama-nemotron-rerank-1b-v2"}
       ENABLE_RERANKER: ${ENABLE_RERANKER:-True}
+      # When using the VLM reranker, include images alongside text in passages. Set to False for text-only chunks.
+      APP_RANKING_VLM_INCLUDE_IMAGES: ${APP_RANKING_VLM_INCLUDE_IMAGES:-False}
       # Default score threshold for filtering documents by reranker relevance (0.0 to 1.0)
       RERANKER_SCORE_THRESHOLD: ${RERANKER_SCORE_THRESHOLD:-${RERANKER_CONFIDENCE_THRESHOLD:-0.0}}
 

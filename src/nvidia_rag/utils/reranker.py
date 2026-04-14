@@ -104,6 +104,10 @@ class NVIDIAVLMRerank(BaseDocumentCompressor):
     url: str = Field(default="", description="URL endpoint for reranking service.")
     api_key: str | None = Field(default=None, description="Optional API key.")
     top_n: int = Field(default=5, ge=0, description="The number of documents to return.")
+    include_images: bool = Field(
+        default=True,
+        description="Include images alongside text in reranker passages. Set to False to pass text-only chunks.",
+    )
     default_headers: dict = Field(
         default_factory=dict,
         description="Default headers merged into all requests.",
@@ -120,21 +124,24 @@ class NVIDIAVLMRerank(BaseDocumentCompressor):
         url: str = "",
         api_key: str | None = None,
         top_n: int = 5,
+        include_images: bool = True,
         default_headers: dict | None = None,
         config: NvidiaRAGConfig | None = None,
         timeout: int = 600,
     ) -> None:
+        if config is not None:
+            include_images = config.ranking.vlm_reranker_include_images
         super().__init__(
             model=model,
             url=url,
             api_key=api_key,
             top_n=top_n,
+            include_images=include_images,
             default_headers=default_headers or {},
             timeout=timeout,
         )
         self._invoke_url = _build_vlm_rerank_invoke_url(url, model)
         self._session = requests.Session()
-        _ = config
 
     def _headers(self) -> dict[str, str]:
         """Build request headers for the VLM reranker API."""
@@ -201,9 +208,10 @@ class NVIDIAVLMRerank(BaseDocumentCompressor):
         passages: list[dict[str, str]] = []
         for doc in documents:
             passage = {"text": doc.page_content}
-            image_data_url = self._build_image_data_url(doc)
-            if image_data_url:
-                passage["image"] = image_data_url
+            if self.include_images:
+                image_data_url = self._build_image_data_url(doc)
+                if image_data_url:
+                    passage["image"] = image_data_url
             passages.append(passage)
 
         return {
