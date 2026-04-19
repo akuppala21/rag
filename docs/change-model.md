@@ -113,6 +113,46 @@ embeddings:
 When using models from different providers (e.g., NVIDIA for LLM, Azure OpenAI for embeddings), you can configure service-specific API keys. See [Service-Specific API Keys](api-key.md#service-specific-api-keys) for details.
 :::
 
+### Switch Between Text and VLM Embedding Models
+
+The default embedding model is `nvidia/llama-nemotron-embed-vl-1b-v2` (VLM). To switch to the text-only embedding model (`nvidia/llama-nemotron-embed-1b-v2`), or to any other embedding model, follow these steps:
+
+1. Export the new model name and its NIM service URL:
+
+   ```bash
+   # VLM embedding model (default)
+   export APP_EMBEDDINGS_SERVERURL=nemotron-vlm-embedding-ms:8000/v1
+   export APP_EMBEDDINGS_MODELNAME=nvidia/llama-nemotron-embed-vl-1b-v2
+
+   # Text-only embedding model
+   # export APP_EMBEDDINGS_SERVERURL=nemotron-embedding-ms:8000/v1
+   # export APP_EMBEDDINGS_MODELNAME=nvidia/llama-nemotron-embed-1b-v2
+   ```
+
+2. Start the corresponding NIM using the appropriate `nims.yaml` profile:
+
+   | Embedding model | Profile |
+   |---|---|
+   | `nvidia/llama-nemotron-embed-vl-1b-v2` (VLM) | `vlm-embed` |
+   | `nvidia/llama-nemotron-embed-1b-v2` (text) | `text-embed` |
+
+   ```bash
+   # VLM embedding NIM
+   USERID=$(id -u) docker compose -f deploy/compose/nims.yaml --profile vlm-embed up -d
+
+   # Text embedding NIM
+   # USERID=$(id -u) docker compose -f deploy/compose/nims.yaml --profile text-embed up -d
+   ```
+
+3. Restart both servers so they pick up the new endpoint:
+
+   ```bash
+   docker compose -f deploy/compose/docker-compose-ingestor-server.yaml up -d
+   docker compose -f deploy/compose/docker-compose-rag-server.yaml up -d
+   ```
+
+4. Re-ingest your documents — the vector index must be rebuilt whenever the embedding model changes.
+
 
 
 ## For Self-Hosted On Premises Microservices
