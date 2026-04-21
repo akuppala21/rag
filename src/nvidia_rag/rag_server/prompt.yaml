@@ -382,8 +382,5 @@ query_decomposition_rag_template:
     Question: {question}
 
 image_captioning_prompt:
-  system: |
-    /no_think
-
   human: |
     Describe this image in detail, including the main subjects, their actions, the setting, and any notable objects or features.
