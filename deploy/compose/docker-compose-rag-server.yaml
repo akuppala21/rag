@@ -101,12 +101,13 @@ services:
 
       ##===Embedding Model specific configurations===
       # url on which embedding model is hosted. If "", Nvidia hosted API is used
-      APP_EMBEDDINGS_SERVERURL: ${APP_EMBEDDINGS_SERVERURL-"nemotron-embedding-ms:8000/v1"}
-      APP_EMBEDDINGS_MODELNAME: ${APP_EMBEDDINGS_MODELNAME:-nvidia/llama-nemotron-embed-1b-v2}
+      # For text-only Embedding Model
+      # APP_EMBEDDINGS_SERVERURL: ${APP_EMBEDDINGS_SERVERURL-"nemotron-embedding-ms:8000/v1"}
+      # APP_EMBEDDINGS_MODELNAME: ${APP_EMBEDDINGS_MODELNAME:-nvidia/llama-nemotron-embed-1b-v2}
+      # For VLM Embedding Model (llama-nemotron-embed-vl-1b-v2)
+      APP_EMBEDDINGS_SERVERURL: ${APP_EMBEDDINGS_SERVERURL-"nemotron-vlm-embedding-ms:8000/v1"}
+      APP_EMBEDDINGS_MODELNAME: ${APP_EMBEDDINGS_MODELNAME:-nvidia/llama-nemotron-embed-vl-1b-v2}
       APP_EMBEDDINGS_DIMENSIONS: ${APP_EMBEDDINGS_DIMENSIONS:-2048}
-      # For VLM Embedding Model (Nemoretriever-1b-vlm-embed-v1)
-      # APP_EMBEDDINGS_SERVERURL: ${APP_EMBEDDINGS_SERVERURL-"nemotron-vlm-embedding-ms:8000/v1"}
-      # APP_EMBEDDINGS_MODELNAME: ${APP_EMBEDDINGS_MODELNAME:-nvidia/llama-nemotron-embed-vl-1b-v2}
 
       ##===Reranking Model specific configurations===
       # url on which ranking model is hosted. If "", Nvidia hosted API is used
@@ -128,7 +129,7 @@ services:
       # Enable reasoning mode for Nemotron 3 nano omni reasoning model
       APP_VLM_ENABLE_THINKING: ${APP_VLM_ENABLE_THINKING:-true}
       # Max reasoning tokens for VLM (0 = no cap); only applied when enable_thinking is true
-      APP_VLM_THINKING_TOKEN_BUDGET: ${APP_VLM_THINKING_TOKEN_BUDGET:-0}
+      APP_VLM_THINKING_TOKEN_BUDGET: ${APP_VLM_THINKING_TOKEN_BUDGET:-16384}
       # VLM generation parameters
       APP_VLM_MAX_TOKENS: ${APP_VLM_MAX_TOKENS:-32768}
       APP_VLM_TEMPERATURE: ${APP_VLM_TEMPERATURE:-0.6}
